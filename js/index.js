@@ -3,13 +3,14 @@ $(function(){
 		document.getElementById("no_of_stars").innerHTML=1000 ;
 		var items = [] ; 
 		$('#pagination-demo').twbsPagination({
-			totalPages:584,
+			totalPages:   20,
 			visiblePages: 7,
+			itemOnPage:  10,
 			onPageClick: function (event, page) {
 				var name= $("#search_name");	
 				document.getElementById("list").innerHTML= "" ;
 					$.ajax({
-					url:"http://localhost:8080/getProjects",
+					url:"http://localhost:8080/",
 					success:function(response){					
 						items = response.items;
 					 	$.each(items,function(index,value){
@@ -89,10 +90,9 @@ $(function(){
 					else{
 
 					}
-			 		
+			 
 			  		});
 				}
-				
 			}
 		}
 		});

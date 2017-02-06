@@ -8,7 +8,6 @@ var lodash = require('lodash');
 function getQueryVariable(variable) {
     var vars = variable.split("=");
     return vars[1] ; 
-    console.log('Query variable %s not found', variable);
 }
 http.createServer(function(request,response)
 {
@@ -84,12 +83,12 @@ http.createServer(function(request,response)
 						if(url.parse(request.url).query!=null){
 							var query = url.parse(request.url).query;
 							var name = getQueryVariable(query);
+
 							fs.readFile(__dirname + '/data.json','utf8', function (err, data) {	
 							
 							if (err) 
 								console.log(err);
 							else{
-									
 								var items = JSON.parse(data).items;
 								var len = items.length ; 
 								var itemsByName = []  ;
