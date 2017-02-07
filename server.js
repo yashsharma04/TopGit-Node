@@ -6,13 +6,12 @@ const url = require('url') ;
 var lodash = require('lodash');
 
 function getQueryVariable(variable) {
-    var vars = variable.split("=");
-    return vars[1] ; 
+    var vars = variable.replace("&","=").split("=");
+    return vars;
 }
 http.createServer(function(request,response)
 {
 	console.log(url.parse(request.url));
-	
 	response.writeHead(200,{"content-type":"text/plain"});
 
 	switch(url.parse(request.url).pathname){
@@ -83,7 +82,6 @@ http.createServer(function(request,response)
 						if(url.parse(request.url).query!=null){
 							var query = url.parse(request.url).query;
 							var name = getQueryVariable(query);
-
 							fs.readFile(__dirname + '/data.json','utf8', function (err, data) {	
 							
 							if (err) 
@@ -91,15 +89,29 @@ http.createServer(function(request,response)
 							else{
 								var items = JSON.parse(data).items;
 								var len = items.length ; 
-								var itemsByName = []  ;
+								var itemsByName = [];
 								for(var i =0 ; i<len ; i++){
-									if(lodash.includes(items[i].name,name)){
+									if(lodash.includes(items[i].name,name[1])){
 										itemsByName.push(items[i]);
 									}
 								}
+								var itemsByPage =  [] ;
+								console.log(itemsByName);
+								var page = name[3];
+								var start = (page-1)*10 ;
+								var end = start +10 ; 
+								for(var i=start;i<end && i<itemsByName.length;i++){
+										itemsByPage.push(itemsByName[i]);
+								} 
+								console.log(itemsByPage);
 								response.writeHead(200, {'Content-Type': 'text/plain'});
-								response.write(JSON.stringify(itemsByName));
-								response.end();
+								response.write(JSON.stringify(itemsByPage));
+								response.end(); 
+								
+								// for(var i=(name[3]-1)*10;i<((name[3]-1)*10 + 10) && (i<itemsByName.length) ;i++){
+								// 	itemsByPage.push(itemsByName[i]); 
+								// }
+								
 							}	
 						});
 
